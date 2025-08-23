@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('project_schedules', function (Blueprint $table) {
-              $table->id();
-              $table->string('title');
-        $table->date('date');
-        $table->text('status');
-        $table->timestamps();
+        Schema::create('project_schedules', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('project_id')
+                  ->constrained('projects')
+                  ->onDelete('cascade'); // If a project is deleted, delete its schedule
+            $table->date('date');
+            $table->string('status'); // better to store as string, not text
+            $table->timestamps();
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('project_schedules');
     }
 };

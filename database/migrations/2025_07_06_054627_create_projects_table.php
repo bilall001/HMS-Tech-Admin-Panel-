@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->string('file')->nullable(); // ✅ Make file nullable to avoid integrity issues
+            $table->string('file')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->string('duration')->nullable();
             $table->date('start_date')->nullable();
@@ -24,11 +24,13 @@ return new class extends Migration
             $table->enum('type', ['team', 'individual']);
 
             $table->unsignedBigInteger('team_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable(); // Developer or Client
+            $table->unsignedBigInteger('business_developer_id')->nullable(); // ✅ New column
 
-            // ✅ Correct FK: users table, not add_users
+            // Foreign keys
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('business_developer_id')->references('id')->on('add_users')->onDelete('set null'); // ✅ Business Developer
 
             $table->timestamps();
         });

@@ -1,19 +1,26 @@
-@extends('admin.layouts.main')
+{{-- Controller must send: $teams, $users, $developers --}}
 
+@extends('admin.layouts.main')
+@section('title')
+    Teams - HMS Tech & Solutions
+@endsection
 @section('content')
 <div class="container-fluid">
     <div class="row mb-4 align-items-center">
+        <!-- Left side: Page Title -->
         <div class="col-md-6">
             <h4 class="page-title mb-0 text-primary fw-bold">Teams Management</h4>
         </div>
-        <div class="col-md-6 text-md-right" >
-            <a href="{{ route('admin.teams.index', ['add' => 1]) }}" class="btn btn-success shadow-sm">
-                <i class="bi bi-plus-circle"></i> {{ isset($teamToEdit) ? 'Back' : 'Add Team' }}
-            </a>
+
+        <!-- Right side: Button -->
+        <div class="col-md-6 d-flex justify-content-end">
+            <button class="btn btn-success shadow-sm" id="addTeamBtn">
+                <i class="bi bi-plus-circle"></i> Add Team
+            </button>
         </div>
     </div>
 
-    @if(session('success'))
+    @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -21,16 +28,15 @@
     @endif
 
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0 text-white">All Teams</h5>
-        </div>
+        <div class="card-header text-white" style="background-color: #1D2C48">All Teams</div>
         <div class="card-body table-responsive">
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-light">
+            <table class="table table-hover mb-0">
+                <thead class="table-primary">
                     <tr>
                         <th>#</th>
                         <th>Team Name</th>
                         <th>Members</th>
+                        <th>Team Lead</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -40,135 +46,207 @@
                             <td>{{ $index + 1 }}</td>
                             <td class="fw-semibold">{{ $team->name }}</td>
                             <td>
-                                @foreach($team->users as $user)
+                                @foreach ($team->users as $user)
                                     <span class="badge bg-info text-dark">{{ $user->name }}</span>
                                 @endforeach
                             </td>
-                            <td class="text-center">
-                                <a href="{{ route('admin.teams.index', ['edit' => $team->id]) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-                                <form action="{{ route('admin.teams.destroy', $team->id) }}" method="POST" class="d-inline-block">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash"></i> Delete
+                            <td>{{ $team->teamLead?->user?->name ?? 'N/A' }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-1 justify-content-center">
+                                    @php
+                                        $teamPayload = [
+                                            'id' => $team->id,
+                                            'name' => $team->name,
+                                            'team_lead_id' => $team->team_lead_id,
+                                            'users' => $team->users
+                                                ->map(fn($u) => [
+                                                    'id' => $u->id,
+                                                    'name' => $u->name,
+                                                ])
+                                                ->values()
+                                                ->toArray(),
+                                        ];
+                                    @endphp
+                                    <button class="btn btn-sm btn-light editTeamBtn"
+                                        data-team='@json($teamPayload)' title="Edit">
+                                        <i class="fas fa-edit text-info"></i>
                                     </button>
-                                </form>
+                                    <form action="{{ route('admin.teams.destroy', $team->id) }}" method="POST"
+                                        class="d-inline" onsubmit="return confirm('Are you sure?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-light" title="Delete">
+                                            <i class="fas fa-trash text-danger"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-muted">No teams found.</td>
+                            <td colspan="5" class="text-center text-muted">No teams found.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-
-    {{-- Add/Edit Modal --}}
-    @if(isset($teamToEdit) || request('add') || $errors->any())
-    <div class="modal show fade d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-lg">
-            <form method="POST" action="{{ isset($teamToEdit) ? route('admin.teams.update', $teamToEdit->id) : route('admin.teams.store') }}">
-                @csrf
-                @if(isset($teamToEdit)) @method('PUT') @endif
-                <div class="modal-content shadow">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title text-white">{{ isset($teamToEdit) ? 'Edit Team' : 'Add New Team' }}</h5>
-                        <a href="{{ route('admin.teams.index') }}" class="btn-close btn-close-white"></a>
-                    </div>
-                    <div class="modal-body">
-                        @if($errors->any())
-                            <div class="alert alert-danger">
-                                <strong>Please fix the following:</strong>
-                                <ul class="mb-0">
-                                    @foreach($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Team Name *</label>
-                            <input type="text" name="name" class="form-control" required value="{{ old('name', $teamToEdit->name ?? '') }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Choose Users *</label>
-                            <div class="input-group">
-                                <select class="form-select" id="userSelect">
-                                    <option value="">-- Select User --</option>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}" data-name="{{ $user->name }}">
-                                            {{ $user->name }} ({{ $user->email }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <button type="button" class="btn btn-outline-secondary" id="addUserBtn">Add</button>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Selected Users</label>
-                            <ul id="selectedUsersList" class="list-group">
-                                @foreach(old('users', isset($teamToEdit) ? $teamToEdit->users->pluck('id')->toArray() : []) as $userId)
-                                    @php $user = $users->find($userId); @endphp
-                                    @if($user)
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ $user->name }}
-                                            <input type="hidden" name="users[]" value="{{ $user->id }}">
-                                            <button type="button" class="btn btn-sm btn-outline-danger remove-user">Remove</button>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-circle"></i> {{ isset($teamToEdit) ? 'Update' : 'Create' }}
-                        </button>
-                        <a href="{{ route('admin.teams.index') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const addUserBtn = document.getElementById("addUserBtn");
-            const userSelect = document.getElementById("userSelect");
-            const selectedUsersList = document.getElementById("selectedUsersList");
-
-            addUserBtn.addEventListener("click", function () {
-                const userId = userSelect.value;
-                const userName = userSelect.options[userSelect.selectedIndex].dataset.name;
-
-                if (!userId) return;
-
-                // Avoid duplicates
-                if ([...selectedUsersList.querySelectorAll("input")].some(input => input.value == userId)) return;
-
-                const li = document.createElement("li");
-                li.className = "list-group-item d-flex justify-content-between align-items-center";
-                li.innerHTML = `${userName}
-                    <input type="hidden" name="users[]" value="${userId}">
-                    <button type="button" class="btn btn-sm btn-outline-danger remove-user">Remove</button>`;
-
-                selectedUsersList.appendChild(li);
-                userSelect.value = '';
-            });
-
-            selectedUsersList.addEventListener("click", function (e) {
-                if (e.target.classList.contains("remove-user")) {
-                    e.target.parentElement.remove();
-                }
-            });
-        });
-    </script>
-    @endif
 </div>
+
+{{-- Add/Edit Team Modal --}}
+<div class="modal fade" id="teamModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form id="teamForm" method="POST" action="{{ route('admin.teams.store') }}">
+            @csrf
+            <input type="hidden" name="_method" id="formMethod" value="POST">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="teamModalTitle">Add New Team</h5>
+                    <button type="button" id="closeTeamModalBtn" class="btn btn-sm" aria-label="Close">
+                        <i class="fas fa-times text-light fs-5"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Team Name *</label>
+                        <input type="text" name="name" id="teamName" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Choose Developers (Members) *</label>
+                        <div class="input-group">
+                            <select class="form-select" id="userSelect">
+                                <option value="">-- Select Developer --</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" data-name="{{ $user->name }}">
+                                        {{ $user->name }} ({{ $user->email }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" id="addUserBtn">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Selected Developers</label>
+                        <ul id="selectedUsersList" class="list-group"></ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Team Lead (From Developers Table)</label>
+                        <select name="team_lead_id" id="teamLeadSelect" class="form-select">
+                            <option value="">-- Select Team Lead --</option>
+                            @foreach ($developers as $dev)
+                                <option value="{{ $dev->id }}">{{ $dev->user->name ?? 'Unnamed Developer' }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div id="formErrors" class="alert alert-danger d-none"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Save
+                    </button>
+                    <button type="button" id="cancelTeamModalBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const teamModal = new bootstrap.Modal(document.getElementById('teamModal'));
+    const addTeamBtn = document.getElementById('addTeamBtn');
+    const editTeamBtns = document.querySelectorAll('.editTeamBtn');
+    const form = document.getElementById('teamForm');
+    const formMethod = document.getElementById('formMethod');
+    const teamModalTitle = document.getElementById('teamModalTitle');
+    const teamNameInput = document.getElementById('teamName');
+    const userSelect = document.getElementById('userSelect');
+    const addUserBtn = document.getElementById('addUserBtn');
+    const selectedUsersList = document.getElementById('selectedUsersList');
+    const teamLeadSelect = document.getElementById('teamLeadSelect');
+    const formErrors = document.getElementById('formErrors');
+
+    function resetForm() {
+        form.reset();
+        formMethod.value = 'POST';
+        form.action = "{{ route('admin.teams.store') }}";
+        teamModalTitle.textContent = 'Add New Team';
+        selectedUsersList.innerHTML = '';
+        formErrors.classList.add('d-none');
+        formErrors.innerHTML = '';
+    }
+
+    function addUserToList(userId, userName) {
+        if ([...selectedUsersList.querySelectorAll("input")].some(input => input.value == userId)) return;
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `${userName}
+            <input type="hidden" name="users[]" value="${userId}">
+            <button type="button" class="btn btn-sm btn-outline-danger remove-user">Remove</button>`;
+        selectedUsersList.appendChild(li);
+    }
+
+    addTeamBtn.addEventListener('click', () => {
+        resetForm();
+        teamModal.show();
+    });
+
+    addUserBtn.addEventListener('click', () => {
+        const userId = userSelect.value;
+        const userName = userSelect.options[userSelect.selectedIndex]?.dataset.name || '';
+        if (!userId) return;
+        addUserToList(userId, userName);
+        userSelect.value = '';
+    });
+
+    selectedUsersList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-user')) {
+            e.target.parentElement.remove();
+        }
+    });
+
+    editTeamBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            resetForm();
+            const team = JSON.parse(btn.getAttribute('data-team'));
+            formMethod.value = 'PUT';
+            form.action = `/admin/teams/${team.id}`;
+            teamModalTitle.textContent = 'Edit Team';
+            teamNameInput.value = team.name;
+            if (team.users && team.users.length > 0) {
+                team.users.forEach(user => {
+                    addUserToList(user.id, user.name);
+                });
+            }
+            teamLeadSelect.value = team.team_lead_id || '';
+            teamModal.show();
+        });
+    });
+
+    form.addEventListener('submit', function(e) {
+        formErrors.classList.add('d-none');
+        formErrors.innerHTML = '';
+        if (!teamNameInput.value.trim()) {
+            e.preventDefault();
+            formErrors.textContent = 'Team name is required.';
+            formErrors.classList.remove('d-none');
+            return false;
+        }
+        if (selectedUsersList.querySelectorAll('input').length === 0) {
+            e.preventDefault();
+            formErrors.textContent = 'Please select at least one user.';
+            formErrors.classList.remove('d-none');
+            return false;
+        }
+    });
+
+    // ✅ Close modal by ❌ and Cancel buttons
+    document.querySelectorAll('#teamModal #closeTeamModalBtn, #teamModal #cancelTeamModalBtn')
+        .forEach(btn => btn.addEventListener('click', () => teamModal.hide()));
+});
+</script>
 @endsection

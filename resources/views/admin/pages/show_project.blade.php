@@ -1,5 +1,7 @@
 @extends('admin.layouts.main')
-
+@section('title')
+Project - HMS Tech  & Solutions
+@endsection
 @section('content')
 <div class="container mt-5">
     <div class="card shadow">

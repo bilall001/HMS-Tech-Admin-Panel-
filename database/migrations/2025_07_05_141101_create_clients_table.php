@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+
+            // Foreign key to users table
+            $table->unsignedBigInteger('user_id')->unique();
+
+            // Removed the name field as requested
             $table->string('email')->unique();
             $table->string('phone');
             $table->enum('gender', ['male', 'female', 'other']);
             $table->timestamps();
+
+            // Foreign key constraint
+           $table->foreign('user_id')->references('id')->on('add_users')->onDelete('cascade');
         });
     }
 

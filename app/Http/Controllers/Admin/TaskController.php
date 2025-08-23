@@ -14,7 +14,7 @@ class TaskController extends Controller
     public function index()
     {
 $tasks = Task::with(['project.client', 'team', 'user'])->get();
-        $projects = Project::with(['team', 'user'])->get();
+        $projects = Project::with(['team', 'user','client.user'])->get();
         $uniqueTitles = $projects->pluck('title')->unique();
 
         return view('admin.pages.task', compact('tasks', 'projects', 'uniqueTitles'));
@@ -43,20 +43,22 @@ $tasks = Task::with(['project.client', 'team', 'user'])->get();
 
 public function getProjectInfo($title)
 {
-    $project = Project::where('title', $title)->with(['team', 'user', 'client'])->first();
+    $project = Project::where('title', $title)->with(['team', 'user', 'client.user'])->first();
 
     if (!$project) {
         return response()->json(['error' => 'Project not found'], 404);
     }
+    dd($project);
+    return response()-json($project);
 
-    return response()->json([
-        'id' => $project->id,
-        'file' => $project->file,
-        'type' => $project->type,
-        'team' => $project->team,
-        'user' => $project->user,
-        'client' => $project->client,
-    ]);
+    // return response()->json([
+    //     'id' => $project->id,
+    //     'file' => $project->file,
+    //     'type' => $project->type,
+    //     'team' => $project->team,
+    //     'user' => $project->user,
+    //     'client' => $project->client,
+    // ]);
 }
 
 

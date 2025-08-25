@@ -64,6 +64,7 @@
                             <td>
 
                                 <div class="d-flex align-items-center gap-1">
+                                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
                                     <button type="submit" class="btn btn-sm btn-light" title="edit"
                                         onclick="openEditModal({{ $partner->load('investments')->toJson() }})">
                                         <i class="fas fa-edit text-info"></i>
@@ -77,6 +78,7 @@
                                         </button>
                                     </form>
                                 </div>
+                                @endif
                             </td>
 
                         </tr>

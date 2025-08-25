@@ -58,6 +58,7 @@
                                 <button class="btn btn-sm btn-outline-info view-bizdev-btn" data-dev='@json($dev)'>
                                     <i class="fas fa-eye"></i>
                                 </button>
+                                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
                                 <button class="btn btn-sm btn-outline-primary edit-bizdev-btn" data-dev='@json($dev)'>
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -65,6 +66,7 @@
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                     @empty

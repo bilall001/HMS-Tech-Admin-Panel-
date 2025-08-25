@@ -8,11 +8,17 @@ Client - HMS Tech & Solutions
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="page-title">👥 Manage Clients</h4>
+<<<<<<< HEAD
         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
         <button class="btn btn-primary" id="createClientBtn">
             <i class="bi bi-person-plus"></i> Add Client
         </button>
         @endif
+=======
+        <button class="btn btn-primary" id="createClientBtn">
+            <i class="bi bi-person-plus"></i> Add Client
+        </button>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     </div>
 
     {{-- Flash Messages --}}
@@ -41,9 +47,13 @@ Client - HMS Tech & Solutions
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Gender</th>
+<<<<<<< HEAD
                         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
                         <th>Actions</th>
                         @endif
+=======
+                        <th>Actions</th>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                     </tr>
                 </thead>
                 <tbody>
@@ -56,7 +66,11 @@ Client - HMS Tech & Solutions
                             <td>
                                 <div class="d-flex align-items-center gap-1">
                                     {{-- View --}}
+<<<<<<< HEAD
                                     {{-- <button 
+=======
+                                    <button 
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                                       class="btn btn-sm btn-light view-client-btn" 
                                       data-name="{{ $client->user->name }}"
                                       data-email="{{ $client->user->email }}"
@@ -65,6 +79,7 @@ Client - HMS Tech & Solutions
                                       title="View"
                                     >
                                       <i class="fas fa-eye text-primary"></i>
+<<<<<<< HEAD
                                     </button> --}}
                                     @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
                                     {{-- Edit --}}
@@ -79,6 +94,22 @@ Client - HMS Tech & Solutions
                                       <i class="fas fa-edit text-info"></i>
                                     </button>
 
+=======
+                                    </button>
+
+                                    {{-- Edit --}}
+                                    <button 
+                                      class="btn btn-sm btn-light edit-client-btn"
+                                      data-id="{{ $client->id }}"
+                                      data-user_id="{{ $client->user_id }}"
+                                      data-phone="{{ $client->phone }}"
+                                      data-gender="{{ $client->gender }}"
+                                      title="Edit"
+                                    >
+                                      <i class="fas fa-edit text-info"></i>
+                                    </button>
+
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                                     {{-- Delete --}}
                                     <form 
                                       action="{{ route('clients.destroy', $client->id) }}" 
@@ -97,7 +128,10 @@ Client - HMS Tech & Solutions
                                       </button>
                                     </form>
                                 </div>
+<<<<<<< HEAD
                                 @endif
+=======
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </td>
                         </tr>
                     @empty

@@ -13,7 +13,10 @@
         </div>
 
         <!-- Right side: Button -->
+<<<<<<< HEAD
         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
+=======
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
         <div class="col-md-6 d-flex justify-content-end">
             <button class="btn btn-success shadow-sm" id="addTeamBtn">
                 <i class="bi bi-plus-circle"></i> Add Team

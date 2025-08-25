@@ -6,11 +6,17 @@
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="page-title">💻 Manage Developers</h4>
+<<<<<<< HEAD
         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
         <button class="btn btn-primary" id="createDeveloperBtn">
             <i class="bi bi-plus-circle"></i> Add Developer
         </button>
         @endif
+=======
+        <button class="btn btn-primary" id="createDeveloperBtn">
+            <i class="bi bi-plus-circle"></i> Add Developer
+        </button>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     </div>
 
     {{-- Flash Messages --}}
@@ -30,9 +36,13 @@
                         <th>Experience</th>
                         <th>Work Type</th>
                         <th>Salary</th>
+<<<<<<< HEAD
                         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
                         <th class="text-center">Actions</th>
                         @endif
+=======
+                        <th class="text-center">Actions</th>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                     </tr>
                 </thead>
                 <tbody>
@@ -49,10 +59,16 @@
                             </td>
                             <td>₨{{ number_format($developer->salary, 2) }}</td>
                             <td class="text-center">
+<<<<<<< HEAD
                                 {{-- <button class="btn btn-sm btn-outline-info view-dev-btn" data-dev='@json($developer)'>
                                     <i class="fas fa-eye"></i>
                                 </button> --}}
                                 @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
+=======
+                                <button class="btn btn-sm btn-outline-info view-dev-btn" data-dev='@json($developer)'>
+                                    <i class="fas fa-eye"></i>
+                                </button>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                                 <button class="btn btn-sm btn-outline-primary edit-dev-btn" data-dev='@json($developer)'>
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -60,7 +76,10 @@
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                 </form>
+<<<<<<< HEAD
                                 @endif
+=======
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </td>
                         </tr>
                     @empty

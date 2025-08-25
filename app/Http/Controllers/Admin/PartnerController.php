@@ -15,6 +15,7 @@ class PartnerController extends Controller
     /**
      * Admin: Show all partners
      */
+<<<<<<< HEAD
 public function index()
 {
     $user = auth()->user();
@@ -37,6 +38,16 @@ public function index()
 }
 
 
+=======
+    public function index()
+    {
+        $partners = Partner::with('investments', 'user')->get();
+        $partnerUsers = AddUser::where('role', 'partner')->get();
+        // dd($partnerUsers);
+        return view('admin.pages.partner', compact('partners', 'partnerUsers'));
+    }
+
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     /**
      * Admin: Store a new partner
      */

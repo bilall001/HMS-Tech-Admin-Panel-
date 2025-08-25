@@ -84,6 +84,7 @@
                                 <i class="mdi mdi-account-tie-outline" style="font-size: 18px;"></i> Clients
                             </a>
                         </li>
+<<<<<<< HEAD
                         <li>
                             <a href="{{ route('leads.index') }}">
                                 <i class="mdi mdi-magnify" style="font-size: 18px;"></i> Leads
@@ -107,6 +108,9 @@
                                 Business Developer
                             </a>
                         </li>
+=======
+
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                         <!-- Company Expense -->
                         <li>
                             <a href="{{ route('companyExpense.index') }}">
@@ -129,7 +133,11 @@
                         </li>
                         <li>
                             <a href="{{ route('team_managers.index') }}">
+<<<<<<< HEAD
                                 <i class="mdi mdi-account-tie" style="font-size: 18px;"></i> Manage Team Managers
+=======
+                                <i class="mdi mdi-account-tie" style="font-size: 18px;"></i> Manage Teams
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </a>
                         </li>
 
@@ -171,6 +179,7 @@
                             </a>
                         </li>
 
+<<<<<<< HEAD
 
 
 
@@ -210,6 +219,52 @@
                           <li>
                             <a href="{{ route('admin.projects.index') }}">
                                 <i class="mdi mdi-briefcase-outline" style="font-size: 18px;"></i> Manage Projects
+=======
+                        <!-- Manage Partners -->
+                        <li>
+                            <a href="{{ route('admin.partners.index') }}">
+                                <i class="bi bi-people"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Manage Partners
+                            </a>
+                        </li>
+
+                        <!-- Manage Business Developers -->
+                        <li>
+                            <a href="{{ route('business-developers.index') }}">
+                                <i class="bi bi-people"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Business Developer
+                            </a>
+                        </li>
+
+
+
+
+                        {{-- =========================== TEAM MANAGER =========================== --}}
+                    @elseif(auth()->user()->role === 'team manager')
+                        <li>
+                            <a href="{{ route('teamManager.dashboard') }}">
+                                <i class="mdi mdi-view-dashboard-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
+
+                        <li><a href="{{ route('admin.teams.index') }}">
+                                <i class="mdi mdi-account-group-outline" style="font-size: 18px;"></i> Manage Teams
+                            </a></li>
+                        <li><a href="{{ route('admin.tasks.index') }}">
+                                <i class="mdi mdi-clipboard-check-outline" style="font-size: 18px;"></i> Manage Tasks
+                            </a></li>
+
+                        <li><a href="{{ route('projectSchedule.index') }}">
+                                <i class="mdi mdi-calendar-clock" style="font-size: 18px;"></i> Project Schedule
+                            </a></li>
+                        {{-- =========================== BUSINESS DEVELOPER =========================== --}}
+                    @elseif(auth()->user()->role === 'business developer')
+                        <li>
+                            <a href="{{ route('business-developer.dashboard') }}">
+                                <i class="mdi mdi-view-dashboard-outline" style="font-size: 18px;"></i> Dashboard
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </a>
                         </li>
                         <li>
@@ -230,6 +285,7 @@
                                 <i class="mdi mdi-star-outline" style="font-size: 18px;"></i> My Points
                             </a></li>
                     @endif
+<<<<<<< HEAD
 
                     {{-- =========================== CLIENT =========================== --}}
                     @if (auth()->check() && auth()->user()->role === 'client')
@@ -278,6 +334,21 @@
                                 <i class="bi bi-people"
                                     style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
                                 Business Developer
+=======
+
+                    {{-- =========================== CLIENT =========================== --}}
+                    @if (auth()->check() && auth()->user()->role === 'client')
+                        <li>
+                            <a href="{{ route('client.dashboard') }}">
+                                <i class="mdi mdi-briefcase-account-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->check() && auth()->user()->role === 'partner')
+                        <li>
+                            <a href="{{ route('partner.dashboard') }}">
+                                <i class="mdi mdi-briefcase-account-outline" style="font-size: 18px;"></i> Dashboard
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </a>
                         </li>
                     @endif

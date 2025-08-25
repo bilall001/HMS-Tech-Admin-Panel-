@@ -1,6 +1,10 @@
 @extends('admin.layouts.main')
 @section('title')
+<<<<<<< HEAD
 All Users - HMS Tech  & Solutions
+=======
+All Users - HMS Tech & Solutions
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -32,7 +36,11 @@ All Users - HMS Tech  & Solutions
 
     {{-- Users Table --}}
     <div class="card">
+<<<<<<< HEAD
         <div class="card-header text-white" style="background-color: rgb(2, 2, 100)">User List</div>
+=======
+        <div class="card-header text-white" style="background-color: #1D2C48">User List</div>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
         <div class="card-body table-responsive">
             <table class="table table-hover mb-0">
                 <thead class="table-primary">
@@ -50,6 +58,7 @@ All Users - HMS Tech  & Solutions
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->username }}</td>
                             <td>{{ $user->email }}</td>
+<<<<<<< HEAD
                             <td>
     @switch($user->role)
         @case('admin')
@@ -118,6 +127,52 @@ All Users - HMS Tech  & Solutions
                                         </form>
                                     @endif
                                 </div>
+=======
+                            <td><span class="badge bg-success">{{ ucfirst($user->role) }}</span></td>
+
+                            <td class="text-start">
+                                {{-- View --}}
+                                <button 
+                                    class="btn btn-sm btn-outline-info me-1 view-user-btn" 
+                                    data-name="{{ $user->name }}"
+                                    data-username="{{ $user->username }}"
+                                    data-email="{{ $user->email }}"
+                                    data-role="{{ ucfirst($user->role) }}"
+                                    title="View"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </button>
+
+                                {{-- Edit --}}
+                                @if(auth()->user()->role === 'admin')
+                                    <button 
+                                        class="btn btn-sm btn-outline-primary me-1 edit-user-btn"
+                                        data-id="{{ $user->id }}"
+                                        data-url="{{ route('add-users.update', $user->id) }}"
+                                        data-name="{{ $user->name }}"
+                                        data-username="{{ $user->username }}"
+                                        data-email="{{ $user->email }}"
+                                        data-role="{{ $user->role }}"
+                                        title="Edit"
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+
+                                    {{-- Delete --}}
+                                    <form 
+                                        action="{{ route('add-users.destroy', $user->id) }}" 
+                                        method="POST" 
+                                        class="d-inline" 
+                                        onsubmit="return confirm('Are you sure?')"
+                                    >
+                                        @csrf 
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </td>
                         </tr>
                     @empty
@@ -132,16 +187,26 @@ All Users - HMS Tech  & Solutions
 </div>
 
 {{-- Modal: Create/Edit User --}}
+<<<<<<< HEAD
 <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+=======
+<div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     <div class="modal-dialog">
         <form method="POST" id="userForm" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="_method" id="formMethod" value="POST">
             <input type="hidden" name="user_id" id="userId">
             <div class="modal-content">
+<<<<<<< HEAD
                 <div class="modal-header">
                     <h5 class="modal-title">Add User</h5>
                     <button type="button" id="closeModalBtn" class="btn btn-sm" aria-label="Close">
+=======
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Add User</h5>
+                    <button type="button" id="userCloseBtn" class="btn btn-sm" aria-label="Close">
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                         <i class="fas fa-times text-dark fs-5"></i>
                     </button>
                 </div>
@@ -180,7 +245,11 @@ All Users - HMS Tech  & Solutions
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Save User</button>
+<<<<<<< HEAD
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+=======
+                    <button type="button" id="userCancelBtn" class="btn btn-secondary">Cancel</button>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                 </div>
             </div>
         </form>
@@ -188,6 +257,7 @@ All Users - HMS Tech  & Solutions
 </div>
 
 {{-- Modal: View User --}}
+<<<<<<< HEAD
 <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -196,6 +266,16 @@ All Users - HMS Tech  & Solutions
                     <button type="button" id="closeModalBtn" class="btn btn-sm" aria-label="Close">
                         <i class="fas fa-times text-dark fs-5"></i>
                     </button>
+=======
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">User Info</h5>
+                <button type="button" id="viewCloseBtn" class="btn btn-sm" aria-label="Close">
+                    <i class="fas fa-times text-dark fs-5"></i>
+                </button>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
             </div>
             <div class="modal-body">
                 <div class="mb-2"><strong>Name:</strong> <span id="viewName"></span></div>
@@ -204,7 +284,11 @@ All Users - HMS Tech  & Solutions
                 <div class="mb-2"><strong>Role:</strong> <span id="viewRole"></span></div>
             </div>
             <div class="modal-footer">
+<<<<<<< HEAD
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+=======
+                <button type="button" id="viewCancelBtn" class="btn btn-secondary">Close</button>
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
             </div>
         </div>
     </div>
@@ -216,6 +300,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const userForm = document.getElementById('userForm');
     const userModalEl = document.getElementById('userModal');
     const userModal = new bootstrap.Modal(userModalEl);
+<<<<<<< HEAD
+=======
+    const viewModalEl = document.getElementById('viewUserModal');
+    const viewModal = new bootstrap.Modal(viewModalEl);
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     const modalTitle = document.querySelector('#userModal .modal-title');
     const formMethodInput = document.getElementById('formMethod');
 
@@ -262,8 +351,12 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('viewUsername').innerText = this.dataset.username;
             document.getElementById('viewEmail').innerText = this.dataset.email;
             document.getElementById('viewRole').innerText = this.dataset.role;
+<<<<<<< HEAD
 
             new bootstrap.Modal(document.getElementById('viewUserModal')).show();
+=======
+            viewModal.show();
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
         });
     });
 
@@ -314,10 +407,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+<<<<<<< HEAD
     // Close modal button
     document.getElementById('closeModalBtn').addEventListener('click', function() {
         userModal.hide();
     });
+=======
+    // ✅ Close Add/Edit modal (❌ & Cancel)
+    document.querySelectorAll('#userModal #userCloseBtn, #userModal #userCancelBtn')
+        .forEach(btn => btn.addEventListener('click', () => userModal.hide()));
+
+    // ✅ Close View modal (❌ & Cancel)
+    document.querySelectorAll('#viewUserModal #viewCloseBtn, #viewUserModal #viewCancelBtn')
+        .forEach(btn => btn.addEventListener('click', () => viewModal.hide()));
+>>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 });
 </script>
 @endsection

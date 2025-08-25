@@ -1,5 +1,7 @@
 @extends('admin.layouts.main')
-
+@section('title')
+Attendance - HMS Tech  & Solutions
+@endsection
 @section('content')
 <div class="container my-5">
   <h1 class="h3 mb-4 text-primary">

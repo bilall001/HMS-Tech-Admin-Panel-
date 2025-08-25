@@ -2,189 +2,274 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Team;
+use App\Models\Salary;
 use App\Models\AddUser;
+use App\Models\Project;
 use App\Models\Developer;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 
 class DeveloperController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-   public function index()
-{
-    $developers = Developer::with('user')->latest()->get();
-    return view('admin.pages.developers.all_developer', compact('developers'));
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-{
-    // Get all users with role developer
-    $developers = AddUser::where('role', 'developer')->get();
-    return view('admin.pages.developers.add_developer', compact('developers'));
-}
-
-    /**
-     * Store a newly created resource in storage.
-     */
-// In your DeveloperController.php
-
-
-
-
-public function store(Request $request)
-{
-    $data = $request->validate([
-        'add_user_id' => 'required|exists:add_users,id',
-        'profile_image' => 'nullable|image',
-        'cnic_front' => 'nullable|image',
-        'cnic_back' => 'nullable|image',
-        'contract_file' => 'nullable',
-        'skill' => 'nullable|string',
-        'experience' => 'nullable|string',
-        'salary' => 'nullable|numeric',
-    ]);
-
-    // ✅ Handle booleans like you do in update()
-    $data['part_time'] = $request->has('part_time');
-    $data['full_time'] = $request->has('full_time');
-    $data['internship'] = $request->has('internship');
-    $data['job'] = $request->has('job');
-
-    // File upload logic stays the same...
-    if ($request->hasFile('profile_image')) {
-        $file = $request->file('profile_image');
-        $filename = time().'_'.$file->getClientOriginalName();
-        $file->move(public_path('uploads/developers'), $filename);
-        $data['profile_image'] = 'uploads/developers/'.$filename;
-    }
-
-    if ($request->hasFile('cnic_front')) {
-        $file = $request->file('cnic_front');
-        $filename = time().'_'.$file->getClientOriginalName();
-        $file->move(public_path('uploads/developers'), $filename);
-        $data['cnic_front'] = 'uploads/developers/'.$filename;
-    }
-
-    if ($request->hasFile('cnic_back')) {
-        $file = $request->file('cnic_back');
-        $filename = time().'_'.$file->getClientOriginalName();
-        $file->move(public_path('uploads/developers'), $filename);
-        $data['cnic_back'] = 'uploads/developers/'.$filename;
-    }
-
-    if ($request->hasFile('contract_file')) {
-        $file = $request->file('contract_file');
-        $filename = time().'_'.$file->getClientOriginalName();
-        $file->move(public_path('uploads/developers'), $filename);
-        $data['contract_file'] = 'uploads/developers/'.$filename;
-    }
-
-    Developer::create($data);
-
-    return redirect()->route('developers.index')->with('success', 'Developer created!');
-}
-
-
-
-
-
-
-
-    /**
-     * Display the specified resource.
-     */
-   public function show(string $id)
+    public function index()
     {
-        $developer = Developer::with('user')->findOrFail($id);
-        return view('admin.pages.developers.show_developer', compact('developer'));
-    }
+        $user = auth()->user();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-{
-    $developer = Developer::findOrFail($id);
-    $developers = AddUser::where('role', 'developer')->get();
-    return view('admin.pages.developers.update_developer', compact('developer', 'developers'));
-}
+        if ($user->role === 'developer') {
+            $developer = Developer::where('add_user_id', $user->id)->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-     public function update(Request $request, string $id)
-{
-    $data = $request->validate([
-        'add_user_id'   => 'required|exists:add_users,id',
-        'skill'         => 'nullable|string',
-        'experience'    => 'nullable|string',
-        'salary'        => 'nullable|numeric',
-        'profile_image' => 'nullable|image',
-        'cnic_front'    => 'nullable|image',
-        'cnic_back'     => 'nullable|image',
-        'contract_file' => 'nullable|file',
-    ]);
+            if ($developer) {
+                $developer = Developer::where('add_user_id', $user->id)->first();
+                // $projects = Project::where('user_id', $user->id) // projects directly assigned to developer
+                //     ->orWhereHas('team.users', function ($query) use ($user) {
+                //         $query->where('add_users.id', $user->id); // projects assigned via team membership
+                //     })
+                //     ->count();
 
-    $developer = Developer::findOrFail($id);
+                // $directProjects = Project::where('user_id', $user->id)->get();
+                // $directProjectsCount = $directProjects->count();
+                // $teamms = Team::whereHas('users', function ($query) use ($user) {
+                //     $query->where('add_users.id', $user->id);
+                // })->get();
+                // $teamProjects = Project::whereIn('team_id', $teamms->pluck('id'))->get();
 
-    // Handle booleans
-    $data['part_time'] = $request->has('part_time');
-    $data['full_time'] = $request->has('full_time');
-    $data['internship'] = $request->has('internship');
-    $data['job'] = $request->has('job');
+                // $teamProjectsCount = $teamProjects->count();
+                $directProjects = Project::where('user_id', $user->id)
+                    ->with('team', 'businessDeveloper')
+                    ->get()
+                    ->map(function ($project) {
+                        $project->assignment_type = 'Individual';
+                        return $project;
+                    });
+                $directProjectsCount = $directProjects->count();
 
-    $uploadPath = public_path('uploads/developers');
+                // 🔹 Teams the developer belongs to
+                $teams = Team::whereHas('users', function ($query) use ($user) {
+                    $query->where('add_users.id', $user->id);
+                })->with('users')->get();
 
-    // Make sure upload path exists
-    if (!file_exists($uploadPath)) {
-        mkdir($uploadPath, 0755, true);
-    }
+                // 🔹 Team projects
+                $teamProjects = Project::whereIn('team_id', $teams->pluck('id'))
+                    ->with('team', 'businessDeveloper')
+                    ->get()
+                    ->map(function ($project) {
+                        $project->assignment_type = 'Team';
+                        return $project;
+                    });
+                $teamProjectsCount = $teamProjects->count();
 
-    // Handle file fields
-    foreach (['profile_image', 'cnic_front', 'cnic_back', 'contract_file'] as $field) {
-        if ($request->hasFile($field)) {
-            // Delete old file if exists
-            if ($developer->$field && file_exists(public_path($developer->$field))) {
-                unlink(public_path($developer->$field));
+                // 🔹 Combine projects for table
+                $allProjects = $directProjects->concat($teamProjects);
+                // dd($allProjects);
+                // $salary = Salary::where('add_user_id', $user->id)
+                //     ->orderBy('salary_date', 'desc')
+                //     ->get();
+                $salaries = Salary::where('add_user_id', $user->id)
+                    ->where('is_paid', 1)
+                    ->orderByDesc('salary_date')
+                    ->get();
+                $attendanceQuery = Attendance::where('user_id', $user->id)
+                    ->whereMonth('date', now()->month)
+                    ->whereYear('date', now()->year);
+
+                $totalDays = $attendanceQuery->count();
+                // dd($totalDays);
+                $presentDays = (clone $attendanceQuery)->where('status', 'present')->count();
+                $absentDays = (clone $attendanceQuery)->where('is_absent', 1)->count();
+                $leaveDays = (clone $attendanceQuery)->where('is_leave', 1)->count();
+                $attendancePercentage = $totalDays > 0 ? round(($presentDays / $totalDays) * 100, 2) : 0;
+
+                $teams = Team::whereHas('users', function ($query) use ($user) {
+                    $query->where('add_users.id', $user->id);
+                })
+                    ->with(['users' => function ($query) use ($user) {
+                        $query->where('add_users.id', '!=', $user->id); // exclude current developer
+                    }])
+                    ->get();
+                // dd($teams);
+                $teamCount = $teams->count();
+            } else {
+                $projects = collect();
+                $salary = collect();
+                $attendance = collect();
+                $teams = collect();
             }
 
-            $file = $request->file($field);
-            $filename = time().'_'.$file->getClientOriginalName();
-            $file->move($uploadPath, $filename);
-            $data[$field] = 'uploads/developers/'.$filename;
+            return view('admin.pages.developers.dashboard', compact(
+                'developer',
+                'directProjectsCount',
+                'teamProjectsCount',
+                'allProjects',
+                'teams',
+                'teamCount',
+                'salaries',
+                'totalDays',
+                'presentDays',
+                'absentDays',
+                'leaveDays',
+                'attendancePercentage',
+            ));
+        } else {
+            $developers = Developer::orderBy('created_at', 'desc')->get();
+            $users = AddUser::where('role', 'developer')->get();
+
+            return view('admin.pages.developers.add_developer', compact('developers', 'users'));
         }
     }
-
-    $developer->update($data);
-
-    return redirect()->route('developers.index')->with('success', 'Developer details updated successfully!');
-}
-
 
     /**
-     * Remove the specified resource from storage.
+     * 🔹 Dedicated dashboard for developers
      */
-   public function destroy(string $id)
-{
-    $developer = Developer::findOrFail($id);
+    public function dashboard()
+    {
+        $user = auth()->user();
 
-    // Delete uploaded files if they exist
-    foreach (['profile_image', 'cnic_front', 'cnic_back', 'contract_file'] as $field) {
-        if ($developer->$field && file_exists(public_path($developer->$field))) {
-            unlink(public_path($developer->$field));
+        if ($user->role !== 'developer') {
+            abort(403, 'Unauthorized');
         }
+
+        $developer = Developer::where('add_user_id', $user->id)->first();
+        $projects = Project::where('user_id', $user->id)->get();
+        // $salary = Salary::where('add_user_id', $user->id)
+        //     ->orderBy('salary_date', 'desc')
+        //     ->get();
+        $salaries = Salary::where('add_user_id', $user->id)
+            ->where('is_paid', 1)
+            ->orderByDesc('salary_date')
+            ->get();
+        $attendanceQuery = Attendance::where('user_id', $user->id)
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year);
+
+        $totalDays = $attendanceQuery->count();
+        // dd($totalDays);
+        $presentDays = (clone $attendanceQuery)->where('status', 'present')->count();
+        $absentDays = (clone $attendanceQuery)->where('is_absent', 1)->count();
+        $leaveDays = (clone $attendanceQuery)->where('is_leave', 1)->count();
+        $attendancePercentage = $totalDays > 0 ? round(($presentDays / $totalDays) * 100, 2) : 0;
+        $teams = Team::whereHas('users', function ($query) use ($user) {
+            $query->where('add_users.id', $user->id);
+        })->with('users')->get();
+
+        return view('admin.pages.developers.dashboard', compact(
+            'developer',
+            'projects',
+            'teams',
+            'salaries',
+            'totalDays',
+            'presentDays',
+            'absentDays',
+            'leaveDays',
+            'attendancePercentage',
+        ));
     }
 
-    // Delete the developer record
-    $developer->delete();
+    public function create()
+    {
+        $developers = Developer::with('user')->get();
+        $users = AddUser::where('role', 'developer')->get();
 
-    return redirect()->route('developers.index')->with('success', 'Developer deleted successfully!');
-}
+        return view('admin.pages.developers.add_developer', compact('developers', 'users'));
+    }
 
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'add_user_id' => 'required|exists:add_users,id',
+            'profile_image' => 'nullable|image',
+            'cnic_front' => 'nullable|image',
+            'cnic_back' => 'nullable|image',
+            'contract_file' => 'nullable|file',
+            'skill' => 'nullable|string',
+            'experience' => 'nullable|string',
+            'salary' => 'nullable|numeric',
+            'time_type' => 'nullable|string|in:part_time,full_time',
+            'job_type' => 'nullable|string|in:internship,job',
+            'salary_type' => 'nullable|string|in:salary,project',
+        ]);
+
+        // Reset work types
+        $data['part_time'] = $data['time_type'] === 'part_time';
+        $data['full_time'] = $data['time_type'] === 'full_time';
+        $data['internship'] = $data['job_type'] === 'internship';
+        $data['job'] = $data['job_type'] === 'job';
+
+        foreach (['profile_image', 'cnic_front', 'cnic_back', 'contract_file'] as $fileField) {
+            if ($request->hasFile($fileField)) {
+                $file = $request->file($fileField);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/developers'), $filename);
+                $data[$fileField] = 'uploads/developers/' . $filename;
+            }
+        }
+
+        Developer::create($data);
+
+        return redirect()->route('developers.index')->with('success', 'Developer created!');
+    }
+
+    public function show(string $id)
+    {
+        $developer = Developer::with('user')->findOrFail($id);
+
+        return view('admin.pages.developers.add_developer', compact('developer'));
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $developer = Developer::findOrFail($id);
+
+        $data = $request->validate([
+            'add_user_id' => 'required|exists:add_users,id',
+            'skill' => 'nullable|string',
+            'experience' => 'nullable|string',
+            'salary' => 'nullable|numeric',
+            'profile_image' => 'nullable|image',
+            'cnic_front' => 'nullable|image',
+            'cnic_back' => 'nullable|image',
+            'contract_file' => 'nullable|file',
+            'time_type' => 'nullable|string|in:part_time,full_time',
+            'job_type' => 'nullable|string|in:internship,job',
+        ]);
+
+        $developer->fill($data);
+
+        $developer->part_time = $data['time_type'] === 'part_time';
+        $developer->full_time = $data['time_type'] === 'full_time';
+        $developer->internship = $data['job_type'] === 'internship';
+        $developer->job = $data['job_type'] === 'job';
+
+        foreach (['profile_image', 'cnic_front', 'cnic_back', 'contract_file'] as $fileField) {
+            if ($request->hasFile($fileField)) {
+                if ($developer->$fileField && file_exists(public_path($developer->$fileField))) {
+                    unlink(public_path($developer->$fileField));
+                }
+                $file = $request->file($fileField);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/developers'), $filename);
+                $developer->$fileField = 'uploads/developers/' . $filename;
+            }
+        }
+
+        $developer->save();
+
+        return redirect()->route('developers.index')->with('success', 'Developer updated successfully!');
+    }
+
+    public function destroy(string $id)
+    {
+        $developer = Developer::findOrFail($id);
+
+        foreach (['profile_image', 'cnic_front', 'cnic_back', 'contract_file'] as $fileField) {
+            if ($developer->$fileField && file_exists(public_path($developer->$fileField))) {
+                unlink(public_path($developer->$fileField));
+            }
+        }
+
+        $developer->delete();
+
+        return redirect()->route('developers.index')->with('success', 'Developer deleted successfully!');
+    }
 }

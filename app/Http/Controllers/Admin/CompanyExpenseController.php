@@ -2,31 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Developer;
 use App\Models\CompanyExpense;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class CompanyExpenseController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all expenses (with create/edit modals).
      */
     public function index()
     {
+        $developers = Developer::with('user')->get();
         $expenses = CompanyExpense::latest()->get();
-        return view('admin.pages.companyExpense.all_expense', compact('expenses'));
+
+        return view('admin.pages.companyExpense.add_expense', compact('developers', 'expenses'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('admin.pages.companyExpense.add_expense');
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a new expense.
      */
     public function store(Request $request)
     {
@@ -37,30 +32,15 @@ class CompanyExpenseController extends Controller
             'currency' => 'nullable',
             'category' => 'nullable',
             'date' => 'required|date',
-            'receipt_file' => 'required',
+            'receipt_file' => 'nullable|file',
         ]);
 
         $data = $request->only([
-            'title',
-            'description',
-            'amount',
-            'currency',
-            'category',
-            'date',
+            'title', 'description', 'amount', 'currency', 'category', 'date',
         ]);
 
         if ($request->hasFile('receipt_file')) {
-            $file = $request->file('receipt_file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $destinationPath = public_path('uploads/expenses/receipts');
-
-            // Make sure directory exists
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
-
-            $file->move($destinationPath, $filename);
-            $data['receipt_file'] = 'uploads/expenses/receipts/' . $filename;
+            $data['receipt_file'] = $this->uploadFile($request->file('receipt_file'));
         }
 
         CompanyExpense::create($data);
@@ -68,21 +48,8 @@ class CompanyExpenseController extends Controller
         return redirect()->route('companyExpense.index')->with('success', 'Expense created successfully!');
     }
 
-    public function show(CompanyExpense $companyExpense)
-{
-    return view('admin.pages.companyExpense.show_expense', compact('companyExpense'));
-}
-    
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CompanyExpense $companyExpense)
-    {
-        return view('admin.pages.companyExpense.update_expense', compact('companyExpense'));
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update an existing expense.
      */
     public function update(Request $request, CompanyExpense $companyExpense)
     {
@@ -93,35 +60,20 @@ class CompanyExpenseController extends Controller
             'currency' => 'nullable',
             'category' => 'nullable',
             'date' => 'required|date',
-            'receipt_file' => 'nullable',
+            'receipt_file' => 'nullable|file',
         ]);
 
         $data = $request->only([
-            'title',
-            'description',
-            'amount',
-            'currency',
-            'category',
-            'date',
+            'title', 'description', 'amount', 'currency', 'category', 'date',
         ]);
 
         if ($request->hasFile('receipt_file')) {
-            // Delete old file if exists
-            $oldFile = public_path($companyExpense->receipt_file);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
+            // Delete old
+            if ($companyExpense->receipt_file && file_exists(public_path($companyExpense->receipt_file))) {
+                unlink(public_path($companyExpense->receipt_file));
             }
 
-            $file = $request->file('receipt_file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $destinationPath = public_path('uploads/expenses/receipts');
-
-            if (!file_exists($destinationPath)) {
-                mkdir($destinationPath, 0755, true);
-            }
-
-            $file->move($destinationPath, $filename);
-            $data['receipt_file'] = 'uploads/expenses/receipts/' . $filename;
+            $data['receipt_file'] = $this->uploadFile($request->file('receipt_file'));
         }
 
         $companyExpense->update($data);
@@ -130,19 +82,33 @@ class CompanyExpenseController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an expense.
      */
     public function destroy(CompanyExpense $companyExpense)
     {
-        if ($companyExpense->receipt_file) {
-            $oldFile = public_path($companyExpense->receipt_file);
-            if (file_exists($oldFile)) {
-                unlink($oldFile);
-            }
+        if ($companyExpense->receipt_file && file_exists(public_path($companyExpense->receipt_file))) {
+            unlink(public_path($companyExpense->receipt_file));
         }
 
         $companyExpense->delete();
 
         return redirect()->route('companyExpense.index')->with('success', 'Expense deleted successfully!');
+    }
+
+    /**
+     * Handle file upload.
+     */
+    protected function uploadFile($file)
+    {
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = public_path('uploads/expenses/receipts');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0755, true);
+        }
+
+        $file->move($path, $filename);
+
+        return 'uploads/expenses/receipts/' . $filename;
     }
 }

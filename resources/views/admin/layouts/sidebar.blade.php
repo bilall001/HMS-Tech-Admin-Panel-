@@ -1,222 +1,286 @@
 <body class="dark-sidenav">
     <!-- Left Sidenav -->
     <div class="left-sidenav">
-        <!-- LOGO -->
+        @php
+            $user = Auth::user();
+
+            // Determine the dashboard route based on user role
+            switch ($user->role) {
+                case 'admin':
+                    $dashboardRoute = route('admin.dashboard');
+                    break;
+                case 'developer':
+                    $dashboardRoute = route('developers.index');
+                    break;
+                case 'client':
+                    $dashboardRoute = route('client.dashboard');
+                    break;
+                case 'team manager':
+                    $dashboardRoute = route('teamManager.dashboard');
+                    break;
+                default:
+                    $dashboardRoute = route('admin.dashboard'); // fallback or 404
+                    break;
+            }
+        @endphp
+
         <div class="brand">
-            <a href="{{ route('admin.dashboard') }}" class="logo">
+            <a href="{{ $dashboardRoute }}" class="logo">
                 <span>
-                    <img src="{{ asset('assets/logo/white-logo.png') }}" alt="logo-small"
-                        style="width: 215px; margin-top: -64px;">
+                    <img src="/assets/admin/images/HMS_TECH_LOGO1-02.png" alt="logo-small" style="width: 115px;">
                 </span>
             </a>
         </div>
+
+        <!-- LOGO -->
+        {{-- <div class="brand">
+            <a href="{{ route('admin.dashboard') }}" class="logo">
+                <span>
+                    <img src="/assets/admin/images/HMS_TECH_LOGO1-02.png" alt="logo-small" style="width: 115px;">
+                </span>
+            </a>
+        </div> --}}
         <!-- end logo -->
 
         <div class="menu-content h-100" data-simplebar>
             <ul class="metismenu left-sidenav-menu">
 
-                <!-- Dashboard -->
-                 <li>
-        <span style="font-weight:bold; margin-left:10px; color: white;">
-            Welcome, {{ Auth::user()->name }}
-        </span>
-    </li>
+                <!-- Welcome -->
                 <li>
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="ti-control-record"></i> Dashboard
-                    </a>
+                    <span style="font-weight:bold; margin-left:10px; color: white;">
+                        Welcome, {{ Auth::user()->name }}
+                    </span>
                 </li>
+
 
                 @auth
 
-                {{-- =========================== ADMIN =========================== --}}
-                @if(auth()->user()->role === 'admin')
+                    {{-- =========================== ADMIN =========================== --}}
+                    @if (auth()->user()->role === 'admin')
+                        <!-- Dashboard -->
+                        <li>
+                            <a href="{{ route('admin.dashboard') }}">
+                                <i class="mdi mdi-view-dashboard-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
 
-                    <!-- Users -->
-                    <li>
-                        <a href="javascript: void(0);">
-                            <i class="ti-control-record"></i> Users
-                            <span class="menu-arrow left-has-menu">
-                                <i class="mdi mdi-chevron-right"></i>
-                            </span>
-                        </a>
-                        <ul class="nav-second-level">
-                            <li><a href="{{ route('add-users.create') }}">Add User</a></li>
-                            <li><a href="{{ route('add-users.index') }}">All Users</a></li>
-                        </ul>
-                    </li>
+                        <!-- Users -->
+                        <li>
+                            <a href="{{ route('add-users.index') }}">
+                                <i class="mdi mdi-account-multiple-outline" style="font-size: 18px;"></i> Users
+                            </a>
+                        </li>
 
-                    <!-- Developers -->
-                    <li>
-                        <a href="javascript: void(0);">
-                            <i class="ti-control-record"></i> Developers
-                            <span class="menu-arrow left-has-menu">
-                                <i class="mdi mdi-chevron-right"></i>
-                            </span>
-                        </a>
-                        <ul class="nav-second-level">
-                            <li><a href="{{ route('developers.create') }}">Add Developer</a></li>
-                            <li><a href="{{ route('developers.index') }}">All Developers</a></li>
-                        </ul>
-                    </li>
+                        <!-- Developers -->
+                        <li>
+                            <a href="{{ route('developers.create') }}">
+                                <i class="mdi mdi-code-braces" style="font-size: 18px;"></i> Developers
+                            </a>
+                        </li>
 
-                    <!-- Clients -->
-                    <li>
-                        <a href="javascript: void(0);">
-                            <i class="ti-control-record"></i> Clients
-                            <span class="menu-arrow left-has-menu">
-                                <i class="mdi mdi-chevron-right"></i>
-                            </span>
-                        </a>
-                        <ul class="nav-second-level">
-                            <li><a href="{{ route('clients.create') }}">Add Client</a></li>
-                            <li><a href="{{ route('clients.index') }}">All Clients</a></li>
-                        </ul>
-                    </li>
+                        <!-- Clients -->
+                        <li>
+                            <a href="{{ route('clients.index') }}">
+                                <i class="mdi mdi-account-tie-outline" style="font-size: 18px;"></i> Clients
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('leads.index') }}">
+                                <i class="mdi mdi-magnify" style="font-size: 18px;"></i> Leads
+                            </a>
+                        </li>
+                        
+                        <!-- Manage Partners -->
+                        <li>
+                            <a href="{{ route('admin.partners.index') }}">
+                                <i class="bi bi-people"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Manage Partners
+                            </a>
+                        </li>
 
-                    <!-- Company Expense -->
-                    <li><a href="{{ route('companyExpense.index') }}">
-                        <i class="ti-control-record"></i> Company Expense
-                    </a></li>
+                        <!-- Manage Business Developers -->
+                        <li>
+                            <a href="{{ route('business-developers.index') }}">
+                                <i class="bi bi-people"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Business Developer
+                            </a>
+                        </li>
+                        <!-- Company Expense -->
+                        <li>
+                            <a href="{{ route('companyExpense.index') }}">
+                                <i class="mdi mdi-cash-multiple" style="font-size: 18px;"></i> Company Expense
+                            </a>
+                        </li>
 
-                    <!-- Attendance -->
-                    <li><a href="{{ route('attendances.index') }}">
-                        <i class="ti-control-record"></i> Attendance
-                    </a></li>
+                        <!-- Attendance -->
+                        <li>
+                            <a href="{{ route('attendances.index') }}">
+                                <i class="mdi mdi-calendar-check-outline" style="font-size: 18px;"></i> Attendance
+                            </a>
+                        </li>
 
-                    <!-- Manage Teams -->
-                    <li><a href="{{ route('admin.teams.index') }}">
-                        <i class="ti-control-record"></i> Manage Teams
-                    </a></li>
+                        <!-- Manage Teams -->
+                        <li>
+                            <a href="{{ route('admin.teams.index') }}">
+                                <i class="mdi mdi-account-group-outline" style="font-size: 18px;"></i> Manage Teams
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('team_managers.index') }}">
+                                <i class="mdi mdi-account-tie" style="font-size: 18px;"></i> Manage Team Managers
+                            </a>
+                        </li>
 
-                    <!-- Manage Projects -->
-                    <li><a href="{{ route('admin.projects.index') }}">
-                        <i class="ti-control-record"></i> Manage Projects
-                    </a></li>
+                        <!-- Manage Projects -->
+                        <li>
+                            <a href="{{ route('admin.projects.index') }}">
+                                <i class="mdi mdi-briefcase-outline" style="font-size: 18px;"></i> Manage Projects
+                            </a>
+                        </li>
 
-                    <!-- Manage Tasks -->
-                    <li><a href="{{ route('admin.tasks.index') }}">
-                        <i class="ti-control-record"></i> Manage Tasks
-                    </a></li>
+                        <!-- Manage Tasks -->
+                        <li>
+                            <a href="{{ route('admin.tasks.index') }}">
+                                <i class="mdi mdi-clipboard-check-outline" style="font-size: 18px;"></i> Manage Tasks
+                            </a>
+                        </li>
 
-                    <!-- Project Schedule -->
-                    <li>
-                        <a href="javascript: void(0);">
-                            <i class="ti-control-record"></i> Project Schedule
-                            <span class="menu-arrow left-has-menu">
-                                <i class="mdi mdi-chevron-right"></i>
-                            </span>
-                        </a>
-                        <ul class="nav-second-level">
-                            <li><a href="{{ route('projectSchedule.create') }}">Add Schedule</a></li>
-                            <li><a href="{{ route('projectSchedule.index') }}">All Schedules</a></li>
-                        </ul>
-                    </li>
+                        <!-- Project Schedule -->
+                        <li>
+                            <a href="{{ route('projectSchedule.index') }}">
+                                <i class="mdi mdi-calendar-clock"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Project Schedule
+                            </a>
+                        </li>
 
-                    <!-- Developer Points -->
-                    <li><a href="{{ route('developer.points') }}">
-                        <i class="ti-control-record"></i> Developer Points
-                    </a></li>
 
-                    <!-- Manage Salaries -->
-                    <li><a href="{{ route('admin.salaries.index') }}">
-                        <i class="ti-control-record"></i> Manage Salaries
-                    </a></li>
+                        <!-- Developer Points -->
+                        <li>
+                            <a href="{{ route('developer.points') }}">
+                                <i class="mdi mdi-star-outline" style="font-size: 18px;"></i> Developer Points
+                            </a>
+                        </li>
 
-                {{-- =========================== TEAM MANAGER =========================== --}}
-                @elseif(auth()->user()->role === 'team manager')
+                        <!-- Manage Salaries -->
+                        <li>
+                            <a href="{{ route('admin.salaries.index') }}">
+                                <i class="mdi mdi-currency-usd" style="font-size: 18px;"></i> Manage Salaries
+                            </a>
+                        </li>
 
-                    <!-- Users (View Only) -->
-                    <li><a href="{{ route('add-users.index') }}">
-                        <i class="ti-control-record"></i> Users
-                    </a></li>
 
-                    <!-- Developers -->
-                    <li><a href="{{ route('developers.index') }}">
-                        <i class="ti-control-record"></i> Developers
-                    </a></li>
 
-                    <!-- Clients -->
-                    <li><a href="{{ route('clients.index') }}">
-                        <i class="ti-control-record"></i> Clients
-                    </a></li>
 
-                    <!-- Company Expense -->
-                    <li><a href="{{ route('companyExpense.index') }}">
-                        <i class="ti-control-record"></i> Company Expense
-                    </a></li>
 
-                    <!-- Attendance -->
-                    <li><a href="{{ route('attendances.index') }}">
-                        <i class="ti-control-record"></i> Attendance
-                    </a></li>
+                        {{-- =========================== TEAM MANAGER =========================== --}}
+                    @elseif(auth()->user()->role === 'team manager')
+                        <li>
+                            <a href="{{ route('teamManager.dashboard') }}">
+                                <i class="mdi mdi-view-dashboard-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
 
-                    <!-- Manage Teams -->
-                    <li><a href="{{ route('admin.teams.index') }}">
-                        <i class="ti-control-record"></i> Manage Teams
-                    </a></li>
+                        <li><a href="{{ route('admin.teams.index') }}">
+                                <i class="mdi mdi-account-group-outline" style="font-size: 18px;"></i> Manage Teams
+                            </a></li>
+                        <li><a href="{{ route('admin.tasks.index') }}">
+                                <i class="mdi mdi-clipboard-check-outline" style="font-size: 18px;"></i> Manage Tasks
+                            </a></li>
 
-                    <!-- Manage Projects -->
-                    <li><a href="{{ route('admin.projects.index') }}">
-                        <i class="ti-control-record"></i> Manage Projects
-                    </a></li>
+                        <li><a href="{{ route('projectSchedule.index') }}">
+                                <i class="mdi mdi-calendar-clock" style="font-size: 18px;"></i> Project Schedule
+                            </a></li>
+                        {{-- =========================== BUSINESS DEVELOPER =========================== --}}
+                    @elseif(auth()->user()->role === 'business developer')
+                        <li>
+                            <a href="{{ route('business-developer.dashboard') }}">
+                                <i class="mdi mdi-view-dashboard-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
 
-                    <!-- Manage Tasks -->
-                    <li><a href="{{ route('admin.tasks.index') }}">
-                        <i class="ti-control-record"></i> Manage Tasks
-                    </a></li>
+                         <li>
+                            <a href="{{ route('leads.index') }}">
+                                <i class="mdi mdi-magnify" style="font-size: 18px;"></i> Leads
+                            </a>
+                        </li>
 
-                    <!-- Project Schedule -->
-                    <li><a href="{{ route('projectSchedule.index') }}">
-                        <i class="ti-control-record"></i> Project Schedule
-                    </a></li>
+                          <li>
+                            <a href="{{ route('admin.projects.index') }}">
+                                <i class="mdi mdi-briefcase-outline" style="font-size: 18px;"></i> Manage Projects
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('projectSchedule.index') }}">
+                                <i class="mdi mdi-calendar-clock"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Project Schedule
+                            </a>
+                        </li>
+                        {{-- =========================== DEVELOPER =========================== --}}
+                    @elseif(auth()->user()->role === 'developer')
+                        <li>
+                            <a href="{{ route('developers.index') }}">
+                                <i class="mdi mdi-view-dashboard-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
+                        <li><a href="{{ route('developer.points') }}">
+                                <i class="mdi mdi-star-outline" style="font-size: 18px;"></i> My Points
+                            </a></li>
+                    @endif
 
-                    <!-- Developer Points -->
-                    <li><a href="{{ route('developer.points') }}">
-                        <i class="ti-control-record"></i> Developer Points
-                    </a></li>
+                    {{-- =========================== CLIENT =========================== --}}
+                    @if (auth()->check() && auth()->user()->role === 'client')
+                        <li>
+                            <a href="{{ route('client.dashboard') }}">
+                                <i class="mdi mdi-briefcase-account-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->check() && auth()->user()->role === 'partner')
+                        <li>
+                            <a href="{{ route('partner.dashboard') }}">
+                                <i class="mdi mdi-briefcase-account-outline" style="font-size: 18px;"></i> Dashboard
+                            </a>
+                        </li>
+                         <li>
+                            <a href="{{ route('developers.create') }}">
+                                <i class="mdi mdi-code-braces" style="font-size: 18px;"></i> Developers
+                            </a>
+                        </li>
 
-                    <!-- Manage Salaries -->
-                    <li><a href="{{ route('admin.salaries.index') }}">
-                        <i class="ti-control-record"></i> Manage Salaries
-                    </a></li>
+                        <!-- Clients -->
+                        <li>
+                            <a href="{{ route('clients.index') }}">
+                                <i class="mdi mdi-account-tie-outline" style="font-size: 18px;"></i> Clients
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('leads.index') }}">
+                                <i class="mdi mdi-magnify" style="font-size: 18px;"></i> Leads
+                            </a>
+                        </li>
+                        
+                        <!-- Manage Partners -->
+                        <li>
+                            <a href="{{ route('admin.partners.index') }}">
+                                <i class="bi bi-people"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Manage Partners
+                            </a>
+                        </li>
 
-                {{-- =========================== BUSINESS DEVELOPER =========================== --}}
-                @elseif(auth()->user()->role === 'business developer')
-
-                    <!-- Clients -->
-                    <li><a href="{{ route('clients.index') }}">
-                        <i class="ti-control-record"></i> Clients
-                    </a></li>
-
-                    <!-- Deals / Projects -->
-                    <li><a href="{{ route('admin.projects.index') }}">
-                        <i class="ti-control-record"></i> Deals / Projects
-                    </a></li>
-
-                    <!-- Meetings & Tasks -->
-                    <li><a href="{{ route('admin.tasks.index') }}">
-                        <i class="ti-control-record"></i> Meetings & Tasks
-                    </a></li>
-
-                {{-- =========================== DEVELOPER =========================== --}}
-                @elseif(auth()->user()->role === 'developer')
-
-                    <!-- My Points -->
-                    <li><a href="{{ route('developer.points') }}">
-                        <i class="ti-control-record"></i> My Points
-                    </a></li>
-
-                @endif
-
-        @if(auth()->check() && auth()->user()->role === 'client')
-    <li>
-        <a href="{{ route('client.dashboard') }}">
-            <i class="ti-control-record"></i> My Projects
-        </a>
-    </li>
-@endif
-
+                        <!-- Manage Business Developers -->
+                        <li>
+                            <a href="{{ route('business-developers.index') }}">
+                                <i class="bi bi-people"
+                                    style="font-size: 18px; vertical-align: middle; margin-right:8px;"></i>
+                                Business Developer
+                            </a>
+                        </li>
+                    @endif
 
                 @endauth
 

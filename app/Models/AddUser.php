@@ -26,12 +26,18 @@ public function developer()
 {
     return $this->hasOne(Developer::class, 'add_user_id');
 }
-
+public function clients()
+{
+    return $this->hasMany(Client::class, 'user_id');
+}
 public function teams()
 {
     return $this->belongsToMany(Team::class, 'team_user', 'user_id', 'team_id');
 }
-
+public function teamManager()
+{
+    return $this->hasMany(TeamManager::class, 'user_id');
+}
 
     
 }

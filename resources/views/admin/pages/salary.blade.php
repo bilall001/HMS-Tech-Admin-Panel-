@@ -22,11 +22,7 @@ Salaries - HMS Tech & Solutions
     <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#salaryModal">
         <i class="fas fa-plus"></i> Pay Salary
     </button>
-<<<<<<< HEAD
     @endif
-=======
-
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     <div class="card">
         <div class="card-header text-white" style="background-color: #1D2C48">All Salaries</div>
         <div class="card-body table-responsive">

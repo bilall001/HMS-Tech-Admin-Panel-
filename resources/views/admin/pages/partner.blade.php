@@ -12,17 +12,11 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-<<<<<<< HEAD
       @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
     <button class="btn btn-success mb-3" id="openCreateModal">
         <i class="fas fa-plus"></i> Add Partner
     </button>
 @endif
-=======
-        <button class="btn btn-success mb-3" id="openCreateModal">
-            <i class="fas fa-plus"></i> Add Partner
-        </button>
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -70,16 +64,9 @@
                             <td>
 
                                 <div class="d-flex align-items-center gap-1">
-<<<<<<< HEAD
-                                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
                                     <button type="submit" class="btn btn-sm btn-light" title="edit"
                                         onclick="openEditModal({{ $partner->load('investments')->toJson() }})">
                                         <i class="fas fa-edit text-info"></i>
-=======
-                                    <button type="button" class="btn btn-sm btn-warning"
-                                        onclick="openEditModal({{ $partner->load('investments')->toJson() }})">
-                                        Edit
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                                     </button>
                                     <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST"
                                         onsubmit="return confirm('Are you sure?');" class="d-inline">
@@ -90,11 +77,6 @@
                                         </button>
                                     </form>
                                 </div>
-<<<<<<< HEAD
-                            
-                                @endif
-=======
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </td>
 
                         </tr>

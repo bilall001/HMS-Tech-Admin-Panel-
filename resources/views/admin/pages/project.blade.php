@@ -8,7 +8,6 @@
             <div class="col-md-6">
                 <h4 class="page-title">Projects</h4>
             </div>
-<<<<<<< HEAD
             @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
 
             <div class="col-md-6 text-md-right">
@@ -21,17 +20,6 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-=======
-            <div class="col-md-6 text-md-right">
-                <a href="{{ route('admin.projects.index', ['add' => true]) }}" class="btn btn-primary">Add Project</a>
-            </div>
-        </div>
-
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
         <div class="card">
             <div class="card-header text-white" style="background-color: #1D2C48">All Projects</div>
             <div class="card-body table-responsive">

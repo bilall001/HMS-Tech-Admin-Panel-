@@ -42,7 +42,6 @@ class BusinessDeveloperController extends Controller
     /**
      * Update a business developer
      */
-<<<<<<< HEAD
    public function update(Request $request, $id)
 {
     try {
@@ -53,19 +52,10 @@ class BusinessDeveloperController extends Controller
         $this->handleUploads($request, $data, $developer);
 
         // Update the developer
-=======
-    public function update(Request $request, $id)
-    {
-        $developer = BusinessDeveloper::findOrFail($id);
-        $data = $this->validateData($request, $id);
-        $this->handleUploads($request, $data, $developer);
-
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
         $developer->update($data);
 
         return redirect()->route('business-developers.index')
             ->with('success', 'Business Developer updated successfully.');
-<<<<<<< HEAD
 
     } catch (\Exception $e) {
         // Handle exception (e.g., if the update fails)
@@ -73,9 +63,6 @@ class BusinessDeveloperController extends Controller
             ->with('error', 'Failed to update Business Developer: ' . $e->getMessage());
     }
 }
-=======
-    }
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 
     /**
      * Delete a business developer
@@ -186,11 +173,7 @@ class BusinessDeveloperController extends Controller
                 if ($developer && $developer->$field) {
                     Storage::delete($developer->$field);
                 }
-<<<<<<< HEAD
                 $data[$field] = $request->file($field)->store('developers','public');
-=======
-                $data[$field] = $request->file($field)->store('developers');
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
             }
         }
     }

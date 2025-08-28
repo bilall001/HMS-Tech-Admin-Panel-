@@ -23,11 +23,8 @@ class BusinessDeveloper extends Model
     {
         return $this->belongsTo(AddUser::class, 'add_user_id');
     }
-<<<<<<< HEAD
     public function leads()
 {
     return $this->hasMany(Lead::class, 'business_developer_id');
 }
-=======
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 }

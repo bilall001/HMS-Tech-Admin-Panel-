@@ -1,28 +1,18 @@
 @extends('admin.layouts.main')
-<<<<<<< HEAD
 @section('title')
     Business Developer - HMS Tech & Solutions
 @endsection
-=======
-
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 @section('content')
 <div class="container-fluid">
 
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="page-title">💼 Business Developers</h4>
-<<<<<<< HEAD
         @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
         <button class="btn btn-primary" id="createBizDevBtn">
             <i class="bi bi-plus-circle"></i> Add Business Developer
         </button>
         @endif
-=======
-        <button class="btn btn-primary" id="createBizDevBtn">
-            <i class="bi bi-plus-circle"></i> Add Business Developer
-        </button>
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     </div>
 
     {{-- Flash Messages --}}
@@ -68,10 +58,6 @@
                                 <button class="btn btn-sm btn-outline-info view-bizdev-btn" data-dev='@json($dev)'>
                                     <i class="fas fa-eye"></i>
                                 </button>
-<<<<<<< HEAD
-                                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'business developer' || auth()->user()->role === 'team manager')
-=======
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                                 <button class="btn btn-sm btn-outline-primary edit-bizdev-btn" data-dev='@json($dev)'>
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -79,10 +65,6 @@
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                 </form>
-<<<<<<< HEAD
-                                @endif
-=======
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
                             </td>
                         </tr>
                     @empty
@@ -199,11 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
             form.reset();
             formMethod.value = 'PUT';
             document.getElementById('bizDevModalTitle').innerText = 'Edit Business Developer';
-<<<<<<< HEAD
             form.action = `business-developers/${dev.id}`;
-=======
-            form.action = `/admin/business-developers/${dev.id}`;
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
             form.elements['add_user_id'].value = dev.add_user_id || '';
             form.elements['phone'].value = dev.phone || '';
             form.elements['gender'].value = dev.gender || '';
@@ -229,10 +207,6 @@ document.addEventListener('DOMContentLoaded', function () {
             viewBizModal.show();
         });
     });
-<<<<<<< HEAD
-=======
-
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
     // Close modals via ❌ or Cancel
     document.querySelectorAll('.close-bizdev-modal').forEach(btn => {
         btn.addEventListener('click', () => bizDevModal.hide());

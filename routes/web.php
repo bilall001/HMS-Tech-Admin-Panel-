@@ -22,10 +22,7 @@ use App\Http\Controllers\Admin\ClientDashbordController;
 use App\Http\Controllers\Admin\CompanyExpenseController;
 use App\Http\Controllers\Admin\ProjectScheduleController;
 use App\Http\Controllers\Admin\BusinessDeveloperController;
-<<<<<<< HEAD
 use App\Http\Controllers\Admin\LeadController;
-=======
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 use App\Http\Controllers\Admin\TeamManagerDashboardController;
 
 /*
@@ -50,11 +47,7 @@ Route::get('/', function () {
         'admin' => redirect()->route('admin.dashboard'),
         'business developer' => redirect()->route('business-developer.dashboard'),
         'client' => redirect()->route('client.dashboard'),
-<<<<<<< HEAD
         'partner' => redirect()->route('admin.dashboard'),
-=======
-        'partner' => redirect()->route('admin.index'),
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
         'team manager' => redirect()->route('teamManager.dashboard'),
         'developer' => redirect()->route('developer.dashboard'),
         default => redirect()->route('login.form'),
@@ -76,14 +69,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Developers
     Route::resource('developers', DeveloperController::class);
-<<<<<<< HEAD
     // Leads
     Route::resource('leads', LeadController::class);
     // Route::post('/leads/show', [LeadController::class, 'show'])->name('leads.show');
     // Route::post('/leads/fields', [LeadController::class, 'fields'])->name('leads.fields');
 
-=======
->>>>>>> a799297a4ac3a6e973e50e76357d1743c4f85579
 
     // Clients
     Route::prefix('admin')->group(function () {

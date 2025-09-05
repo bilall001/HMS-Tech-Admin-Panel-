@@ -71,6 +71,13 @@
                             </a>
                         </li>
 
+                        <!-- Khata -->
+                        <li>
+                            <a href="{{ route('khata.accounts.index') }}">
+                                <i class="mdi-file-document-outline" style="font-size: 18px;"></i> Khata Account
+                            </a>
+                        </li>
+
                         <!-- Developers -->
                         <li>
                             <a href="{{ route('developers.create') }}">

@@ -46,12 +46,8 @@
  <script src="{{ asset('assets/admin/plugins/datatables/responsive.bootstrap4.min.js') }}"></script>
  <script src="{{ asset('assets/admin/pages/jquery.datatable.init.js') }}"></script>
 
-
-
-
-
  <script src="https://unpkg.com/lucide@latest"></script>
-@yield('custom_js')
+@stack('custom_js')
 
 </body>
 

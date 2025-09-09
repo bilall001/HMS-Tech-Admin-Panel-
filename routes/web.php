@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ClientDashbordController;
 use App\Http\Controllers\Admin\CompanyExpenseController;
 use App\Http\Controllers\Admin\ProjectScheduleController;
 use App\Http\Controllers\Admin\BusinessDeveloperController;
+use App\Http\Controllers\Admin\DeveloperProjectPaymentController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\TeamManagerDashboardController;
 use App\Http\Controllers\Admin\KhataAccountController;
@@ -65,7 +66,7 @@ Route::middleware(['auth', 'can_impersonate'])->post('/admin/impersonate/{user}'
 Route::middleware(['auth'])->post('/admin/impersonate/stop', [ImpersonationController::class, 'stop'])
     ->name('impersonate.stop');
 
-// Everything below here requires authentication
+// Everything below here requires authentication    
 Route::middleware(['auth'])->group(function () {
 
     // Admin Dashboard
@@ -79,6 +80,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Developers
     Route::resource('developers', DeveloperController::class);
+
+    // Developer Project Payments
+    Route::resource('developer_project_payments', DeveloperProjectPaymentController::class)->except(['show', 'create', 'edit']);
     // Leads
     Route::resource('leads', LeadController::class);
     // Route::post('/leads/show', [LeadController::class, 'show'])->name('leads.show');

@@ -22,7 +22,7 @@
 <script src="{{ asset('assets/admin/pages/jquery.tabledit.init.js') }}"></script>
 
 {{-- Forms --}}
-<script src="{{ asset('assets/adminplugins/parsleyjs/parsley.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/parsleyjs/parsley.min.js') }}"></script>
 <script src="{{ asset('assets/admin/pages/jquery.validation.init.js') }}"></script>
 
 <!-- App js -->

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Models\Salary;
+use App\Observers\SalaryObserver;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -31,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
         'manual'               => \App\Models\KhataAccount::class,
         'other'                => \App\Models\KhataAccount::class,
     ]);
+    Salary::observe(SalaryObserver::class);
     }
 }

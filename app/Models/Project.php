@@ -45,4 +45,9 @@ public function schedules()
 {
     return $this->hasMany(ProjectSchedule::class, 'project_id');
 }
+public function payments()
+{
+    return $this->hasMany(DeveloperProjectPayment::class);
+}
+
 }

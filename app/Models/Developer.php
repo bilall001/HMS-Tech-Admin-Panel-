@@ -20,6 +20,7 @@ class Developer extends Model
     'job',
     'salary',
     'profile_image',
+    'salary_type',
     'cnic_front',
     'cnic_back',
     'contract_file',
@@ -43,4 +44,9 @@ public function teams() {
 {
     return $this->belongsTo(AddUser::class, 'developer_id');
 }
+public function payments()
+{
+    return $this->hasMany(DeveloperProjectPayment::class);
+}
+
 }

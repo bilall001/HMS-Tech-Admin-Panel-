@@ -149,7 +149,7 @@
 
                         <!-- Manage Tasks -->
                         <li>
-                            <a href="{{ route('admin.tasks.index') }}">
+                            <a href="{{ route('tasks.index') }}">
                                 <i class="mdi mdi-clipboard-check-outline" style="font-size: 18px;"></i> Manage Tasks
                             </a>
                         </li>
@@ -199,7 +199,7 @@
                         <li><a href="{{ route('admin.teams.index') }}">
                                 <i class="mdi mdi-account-group-outline" style="font-size: 18px;"></i> Manage Teams
                             </a></li>
-                        <li><a href="{{ route('admin.tasks.index') }}">
+                        <li><a href="{{ route('tasks.index') }}">
                                 <i class="mdi mdi-clipboard-check-outline" style="font-size: 18px;"></i> Manage Tasks
                             </a></li>
 

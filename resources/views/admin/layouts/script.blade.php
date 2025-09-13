@@ -47,6 +47,8 @@
  <script src="{{ asset('assets/admin/pages/jquery.datatable.init.js') }}"></script>
 
  <script src="https://unpkg.com/lucide@latest"></script>
+ <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 @stack('custom_js')
 
 </body>

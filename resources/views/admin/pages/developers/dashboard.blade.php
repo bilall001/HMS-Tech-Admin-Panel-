@@ -88,6 +88,44 @@
                     </div><!--end card-->
                 </div> <!--end col-->
             </div><!--end row-->
+            <div class="row mt-4">
+    {{-- Total Points --}}
+    <div class="col-md-4">
+        <div class="card report-card shadow">
+            <div class="card-body text-center">
+                <p class="text-dark mb-1 font-weight-semibold">🌟 Total Points</p>
+                <h3 class="{{ $totalPoints >= 0 ? 'text-success' : 'text-danger' }}">
+                    {{ $totalPoints }}
+                </h3>
+                <small class="text-muted">
+                    {{ $totalPoints >= 0 ? 'Great job! Keep it up 🎉' : '⚠ Try to avoid late submissions' }}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    {{-- Submissions Made --}}
+    <div class="col-md-4">
+        <div class="card report-card shadow">
+            <div class="card-body text-center">
+                <p class="text-dark mb-1 font-weight-semibold">📁 Submissions</p>
+                <h3>{{ $submissionsCount }}</h3>
+                <small class="text-muted">Total projects submitted</small>
+            </div>
+        </div>
+    </div>
+
+    {{-- Best Score --}}
+    <div class="col-md-4">
+        <div class="card report-card shadow">
+            <div class="card-body text-center">
+                <p class="text-dark mb-1 font-weight-semibold">🏆 Best Score</p>
+                <h3 class="text-primary">{{ $bestScore }}</h3>
+                <small class="text-muted">Highest points earned in one submission</small>
+            </div>
+        </div>
+    </div>
+</div>
 
             {{-- 🔹 My Projects --}}
             <div class="card shadow mb-4">

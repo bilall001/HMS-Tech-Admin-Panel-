@@ -94,6 +94,10 @@ class Project extends Model
         return $this->belongsToMany(Developer::class, 'project_member_roles')
             ->withPivot('role_id');
     }
+     public function points()
+    {
+        return $this->hasMany(Point::class, 'project_id');
+    }
     public function eligibleDevelopers(): Collection
     {
         if ($this->type === 'individual') {

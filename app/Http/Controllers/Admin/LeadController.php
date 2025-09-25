@@ -23,7 +23,7 @@ class LeadController extends Controller
     public function index()
     {
         // Fetch all leads with latest first
-        $leads = Lead::with(['project', 'client', 'businessDeveloper','facebook','linkedin','fiverr','upwork','other']) ->orderBy('created_at', 'desc')
+        $leads = Lead::with(['project', 'client', 'businessDeveloper.user','facebook','linkedin','fiverr','upwork','other']) ->orderBy('created_at', 'desc')
     ->get();
         $projects = Project::all();
         $clients = Client::with('user')->get();

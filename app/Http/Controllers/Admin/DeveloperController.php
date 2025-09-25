@@ -10,6 +10,7 @@ use App\Models\Developer;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Point;
 use App\Models\Task;
 
 class DeveloperController extends Controller
@@ -109,6 +110,18 @@ class DeveloperController extends Controller
 
                 // 10) Combine all tasks
                 $allTasks = $directTasks->concat($teamTasks);
+
+                // 11) Points calculation
+                $totalPoints = 0;
+                $bestScore = 0;
+                $submissionsCount = 0;
+
+                if ($developer) {
+                    $points = Point::where('developer_id', $developer->id)->get();
+                    $totalPoints = $points->sum('points');
+                    $bestScore = $points->max('points') ?? 0;
+                    $submissionsCount = $points->count();
+                }
             } else {
                 // Safe defaults if no developer row found for this user
                 $developer = null;
@@ -137,6 +150,9 @@ class DeveloperController extends Controller
                 'allTasks',
                 'directTasksCount',
                 'teamTasksCount',
+                'totalPoints',
+                'bestScore',
+                'submissionsCount'
             ));
         } else {
             $developers = Developer::orderBy('created_at', 'desc')->get();

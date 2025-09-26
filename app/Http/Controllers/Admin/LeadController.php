@@ -47,7 +47,7 @@ public function show(Lead $lead)
    public function store(Request $request)
 {
     $rules = [
-        'lead_title'            => 'required|string|max:255',
+        'lead_title'            => 'nullable|string|max:255',
         'status'                => 'required|in:pending,in_progress,completed,cancelled',
         'lead_get_by'           => 'required|in:facebook,linkedin,upwork,fiverr,other',
         'business_developer_id' => 'required|exists:business_developers,id',
@@ -89,7 +89,7 @@ public function show(Lead $lead)
    public function update(Request $request, Lead $lead)
 {
     $rules = [
-        'lead_title'            => 'required|string|max:255',
+        'lead_title'            => 'nullable|string|max:255',
         'status'                => 'required|in:pending,in_progress,completed,cancelled',
         'lead_get_by'           => 'required|in:facebook,linkedin,upwork,fiverr,other',
         'business_developer_id' => 'required|exists:business_developers,id',

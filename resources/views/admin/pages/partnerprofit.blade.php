@@ -28,12 +28,20 @@
         <div class="card shadow-sm border-0 mt-4 mb-4">
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                 <div>
-                    <h5 class="mb-0 text-white">📅 {{ \Carbon\Carbon::parse($monthProfit->month)->format('F Y') }}</h5>
-                    <small>
-                        Revenue: <strong class="text-success">${{ number_format($monthProfit->total_revenue, 2) }}</strong> | 
-                        Expenses: <strong class="text-danger">${{ number_format($monthProfit->total_expenses, 2) }}</strong> | 
-                        Net Profit: <strong class="text-info">${{ number_format($monthProfit->net_profit, 2) }}</strong>
-                    </small>
+                 <h5 class="mb-0 text-white">
+    📅 {{ \Carbon\Carbon::parse($monthProfit->month)->format('F Y') }}
+    @if($monthProfit->locked)
+        <span class="badge badge-success ml-2">Locked ✅</span>
+    @else
+        <span class="badge badge-warning ml-2">Updating 🔄</span>
+    @endif
+</h5>
+<small>
+    Revenue: <strong class="text-success">PKR {{ number_format($monthProfit->total_revenue, 2) }}</strong> | 
+    Expenses: <strong class="text-danger">PKR {{ number_format($monthProfit->total_expenses, 2) }}</strong> | 
+    Net Profit: <strong class="text-info">PKR {{ number_format($monthProfit->net_profit, 2) }}</strong>
+</small>
+                    
                 </div>
                 <button class="btn btn-sm btn-outline-info text-white" type="button" data-toggle="collapse" data-target="#month-{{ $monthProfit->id }}">
                     View Partner Shares ⬇
@@ -59,7 +67,7 @@
                                     <td>{{ $pProfit->partner->user->name ?? 'N/A' }}</td>
                                     <td>{{ $pProfit->partner->user->email ?? 'N/A' }}</td>
                                     <td>{{ $pProfit->percentage }}%</td>
-                                    <td><strong>${{ number_format($pProfit->profit_amount, 2) }}</strong></td>
+                                    <td><strong>PKR {{ number_format($pProfit->profit_amount, 2) }}</strong></td>
                                     <td>
                                         @if($pProfit->is_received)
                                             <span class="badge badge-success">✅ Received</span>

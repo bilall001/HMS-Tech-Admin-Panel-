@@ -202,7 +202,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>Remaining Price</label><br>
-                                    <strong id="remaining-display">$0.00</strong>
+                                    <strong id="remaining-display">PKR 0.00</strong>
                                     <small class="text-muted d-block">Automatically calculated</small>
                                 </div>
                             </div>

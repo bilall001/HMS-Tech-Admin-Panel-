@@ -20,7 +20,7 @@ class AdminController extends Controller
         // Existing logic
         $clients = Client::count();
         $projects = Project::count();
-         $currentProjects = Project::whereHas('schedules', function ($query) {
+        $currentProjects = Project::whereHas('schedules', function ($query) {
             $query->where('status', 'inProgress');
         })->count();
 
@@ -34,8 +34,13 @@ class AdminController extends Controller
             'partners'   => Partner::all()->count(),
         ];
 
-        $totalIncome = Project::sum('paid_price');
-        $monthExpense  = CompanyExpense::whereMonth('created_at', Carbon::now()->month)
+        $totalIncome = Project::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->sum('paid_price');
+
+        // Current month expenses
+        $monthExpense = CompanyExpense::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
             ->sum('amount');
         $monthProfit = $totalIncome - $monthExpense;
 

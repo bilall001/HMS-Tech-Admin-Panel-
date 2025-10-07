@@ -39,8 +39,8 @@ class AdminController extends Controller
             ->sum('paid_price');
 
         // Current month expenses
-        $monthExpense = CompanyExpense::whereMonth('created_at', Carbon::now()->month)
-            ->whereYear('created_at', Carbon::now()->year)
+        $monthExpense = CompanyExpense::whereMonth('date', Carbon::now()->month)
+            ->whereYear('date', Carbon::now()->year)
             ->sum('amount');
         $monthProfit = $totalIncome - $monthExpense;
 
@@ -50,7 +50,7 @@ class AdminController extends Controller
 
         foreach (range(1, 12) as $month) {
             $income = Project::whereMonth('created_at', $month)->whereYear('created_at', date('Y'))->sum('paid_price');
-            $expense = CompanyExpense::whereMonth('created_at', $month)->whereYear('created_at', date('Y'))->sum('amount');
+            $expense = CompanyExpense::whereMonth('date', $month)->whereYear('date', date('Y'))->sum('amount');
             $profit = $income - $expense;
             $profitPercentage = $income > 0 ? round(($profit / $income) * 100, 2) : 0;
             $monthlyData[] = [

@@ -12,7 +12,7 @@ class DeveloperProjectPaymentObserver
         if ($this->isPaid($payment)) {
             CompanyExpense::create([
                 'developer_payment_id' => $payment->id,
-                'title'       => 'Developer Payment - ' . ($payment->developer->user->name ?? 'Developer1'),
+                'title'       => 'Developer Payment - ' . ($payment->developer->user->name ?? 'Developer12'),
                 'description' => $payment->notes ?: 'Developer project payment automatically logged as expense',
                 'amount'      => $payment->amount,
                 'currency'    => 'PKR',

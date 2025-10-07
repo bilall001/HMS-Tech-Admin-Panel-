@@ -4,9 +4,12 @@
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
+<body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;"> x
 
 <div class="card p-4" style="width: 400px;">
+    <div class="text-center mb-4">
+        <img src="/assets/admin/images/HMS_TECH_LOGO1-02.png" alt="Logo" style="max-width: 150px;">
+    </div>
     <h2 class="text-center mb-4">Login</h2>
     <form method="POST" action="{{ route('login.submit') }}">
         @csrf

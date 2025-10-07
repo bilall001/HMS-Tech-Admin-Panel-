@@ -219,7 +219,7 @@
                         `<p><strong>Receipt:</strong> No file</p>`;
                     const html = `
                 <p><strong>Title:</strong> ${expense.title}</p>
-                <p><strong>Amount:</strong> $${expense.amount} ${expense.currency || 'PKR'}</p>
+                <p><strong>Amount:</strong> ${expense.amount} ${expense.currency || 'PKR'}</p>
                 <p><strong>Category:</strong> ${expense.category || '-'}</p>
                 <p><strong>Date:</strong> ${expense.date}</p>
                 <p><strong>Description:</strong><br>${expense.description || '-'}</p>

@@ -527,7 +527,7 @@
                 const paid = parseFloat(document.querySelector('[name="paid_price"]')?.value) || 0;
                 const remaining = Math.max(total - paid, 0);
                 if (document.getElementById('remaining-display')) {
-                    document.getElementById('remaining-display').innerText = '$' + remaining.toFixed(2);
+                    document.getElementById('remaining-display').innerText = 'PKR ' + remaining.toFixed(2);
                 }
             }
             document.querySelector('[name="price"]')?.addEventListener('input', calculateRemaining);
